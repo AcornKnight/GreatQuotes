@@ -37,10 +37,10 @@
 			//print_r($line);
 			$contentArray[$line]['Quote']= $change;
 			array_unshift($contentArray,$headers);
-			print_r($contentArray);
+			//print_r($contentArray);
 			//print_r($change);
-			echo '<hr>';
-			echo 'Alien';
+			//echo '<hr>';
+			//echo 'Alien';
 			print_r(quoteToString($contentArray));
 			//fwrite($modify, implode(',',$contentArray));
 			file_put_contents($userFile,quoteToString($contentArray));
@@ -58,31 +58,54 @@
 		if (is_array($quote)){
 			$result = [];
 			foreach ($quote as $val) {
-					if(array_key_exists("Author",$val) && array_key_exists("Quote",$val)) {
-						$result[]= $val['Author'].','.$val['Quote']."\n";
+					if(is_array($val)) {
+						if(array_key_exists("Author",$val) && array_key_exists("Quote",$val)) {
+							$result[]= $val['Author'].','.$val['Quote']."\n";
+						}
+					}
+					else {
+						print('$val was not array');
+						print_r($val);
 					}
 			}
 			return $result;
 		}
 		else {
-			if(array_key_exists("Author",$quote) && array_key_exists("Quote",$quote)) {
-				return $quote['Author'].','.$quote['Quote']."\n";
-			}
-			else {
+			//if(array_key_exists("Author",$quote) && array_key_exists("Quote",$quote)) {
+			//	return $quote['Author'].','.$quote['Quote']."\n";
+			//}
+			//else {
 				return null;
-			}
+			//}
 		}
 		
 	}
 	
 	function deleteContent($userFile,$line) {
 			$modify = fopen($userFile,'r+') or die("That csv file does not exist.");
-			while(!feof($userFile)) {
-				$contentArray = fgetcsv($modify);
-			}
-			unset($contentArray[$line]);
-			fwrite($modify, $contentArray);
-			fclose($modify);
+			
+			
+			$contentArray=readContentHeader($userFile);
+			$headers=getHeader($userFile);
+			array_unshift($contentArray,$headers);
+			print_r($contentArray);
+			//print_r(quoteToString($contentArray));
+			
+			//while(!feof($modify)) {
+			//	$contentArray = fgetcsv($modify);
+			//}
+			//echo '<h4>line</h4>';
+			//print_r($line);
+			//echo '<br>';
+			//print_r($contentArray);
+			//echo '<br>';
+			array_splice($contentArray, $line+1, 1);
+			//unset($contentArray[$line]);
+			//echo '<br>spliced<br>';
+			//print_r($contentArray);
+			//fwrite($modify, $contentArray);
+			//fclose($modify);
+			file_put_contents($userFile,quoteToString($contentArray));
 	}
 	
 	function getHeader($file){

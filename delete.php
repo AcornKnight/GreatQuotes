@@ -21,27 +21,37 @@
 			<?php
 			$quotes = readContentHeader('quotes.csv');
 			?>
+			<h2>Posted Index of <?= $_POST['index']?></h2>
 			<h2>Would you like to delete this quote?</h2>
-			<h1><?= $quotes[$_GET['index']]['Author'] ?></h1>
-			<p><?= $quotes[$_GET['index']]['Quote'] ?></p>
+			<h1><?= $quotes[$_POST['index']]['Quote'] ?></h1>
+			<p><?= $quotes[$_POST['index']]['Author'] ?></p>
 			
 			 <?php
 				
 				if(isset($_POST['delete'])) {
-					deleteContent('quotes.csv',$quotes[$_POST['index']]);
+					//echo "Deleting at Index block". $_POST['index'];
+					deleteContent('quotes.csv',$_POST['index']);
 					echo 'That Quote and Author entry was deleted.';
 				}
 			?>
 			
 			
-			<form method="post"	action="<?= $_SERVER['PHP_SELF']?>">
+			<!--<form method="post"	action="<?//= $_SERVER['PHP_SELF']?>">
 				<p>
 				<input type="submit" name="submit" value="Cancel">
 				</p>
-			</form>
+			</form> -->
 			
 			<form method="post"	action="index.php">
 				<p>
+				<input type="submit" name="submit" value="Home">
+				</p>
+			</form>
+			
+			<form method="post"	action="<?= $_SERVER['PHP_SELF']?>">
+				<br><br>
+				<p>
+				<input type="hidden" name="index" value=<?=$_POST['index']?>>
 				<input type="submit" name="delete" value="Delete Quote">
 				</p>
 			</form>
